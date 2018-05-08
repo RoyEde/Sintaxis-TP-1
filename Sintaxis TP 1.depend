@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1525701126 source:c:\users\alumno\desktop\sintaxis tp 1\main.c
+	<stdio.h>
+	<stdlib.h>
+	<stdbool.h>
+
