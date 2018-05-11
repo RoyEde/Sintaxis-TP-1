@@ -1,10 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
-
-void noEsConstanteEntera (char constante[]) {
-  printf("%s no es constante entera", constante);
-}
 
 int esDecimalUOctal (char constante, char tope) {
   return constante >= '0' && constante <= tope;
@@ -47,10 +42,24 @@ int constanteOctal (char constante[]) {
   return constante[i] == '\0';
 }
 
+void escribirArchivo (FILE *archivo,  char mensaje[], char constante[]) {
+  fprintf(archivo, mensaje, constante);
+  return;
+}
+
 void manipularArchivos () {
   FILE *archivoEntrada, *archivoSalida;
   archivoEntrada = fopen("constantes.txt", "r");
   archivoSalida = fopen("clasificacion.txt", "w");
+
+  char actual = fgetc(archivoEntrada);
+  while (actual !=  EOF) {
+
+      actual = fgetc(archivoEntrada);
+  }
+
+  // escribirArchivo(archivoSalida, "%s", "s");
+  // escribirArchivo(archivoSalida, "%s no es constante entera", "Hola");
 
   if (archivoEntrada == NULL || archivoSalida == NULL) {
     printf("Ha ocurrido un error leyendo alguno de los archivos.\n");
