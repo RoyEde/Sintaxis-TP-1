@@ -1,91 +1,95 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-int esDecimalUOctal (char constante, char tope) {
-  return constante >= '0' && constante <= tope;
-}
-
-int esHexa (char constante) {
-  return (constante >= 'a' && constante <= 'f') || (constante >= 'A' && constante <= 'F');
-}
-
-int constanteDecimal (char constante[]) {
-  int i = 1;
-  int condicion = esDecimalUOctal(constante[i], '9');
-  while (constante[i] != '\0' && condicion) {
-    condicion = esDecimalUOctal(constante[i], '9');
-    if (condicion) i++;
+_Bool Decimal (char num, bool correcto) {
+  if (num<'0'||num>'9') {
+    correcto=false;
   }
-
-  return constante[i] == '\0';
+  return correcto;
 }
 
-int constanteHexa (char constante[]) {
-  int i = 2;
-  int condicion = esDecimalUOctal(constante[i], '9') || esHexa(constante[i]);
-  while (constante[i] != '\0' && condicion) {
-    condicion = esDecimalUOctal(constante[i], '9') || esHexa(constante[i]);
-    if (condicion) i++;
+_Bool Octal (char num, bool correcto) {
+  if (num<'0'||num>'7') {
+    correcto=false;
   }
-
-  return constante[i] == '\0';
+  return correcto;
 }
 
-int constanteOctal (char constante[]) {
-  int i = 1;
-  int condicion = esDecimalUOctal(constante[i], '7');
-  while (constante[i] != '\0' && condicion) {
-    condicion = esDecimalUOctal(constante[i], '7');
-    if (condicion) i++;
+_Bool Hexa (char num, bool correcto) {
+  if ((num<'0'||num>'9')&&num!='a'&&num!='A'&&num!='b'&&num!='B'&&num!='c'&&num!='C'&&num!='d'&&num!='D'&&num!='e'&&num!='E'&&num!='f'&&num!='F') {
+    //printf("\n Char: %c -Correcto: %d \n",num,correcto);
+    correcto=false;
   }
-
-  return constante[i] == '\0';
+  return correcto;
 }
 
-void escribirArchivo (FILE *archivo,  char mensaje[], char constante[]) {
-  fprintf(archivo, mensaje, constante);
-  return;
-}
 
-void manipularArchivos () {
-  FILE *archivoEntrada, *archivoSalida;
-  archivoEntrada = fopen("constantes.txt", "r");
-  archivoSalida = fopen("clasificacion.txt", "w");
+void CargarArchivo () {
+  FILE *archivoLectura;
+  FILE *archivoEscritura;
+  char caracter;
+  int i = 0;                  //revisa que el numero es decimal, octal, hexa o ninguno de ellos
+  bool correcto = true;       //revisa que el numero sea valido
+  bool primeraSaltear = false;//se asegura que no revise si la X de hexadecimal es valida ni los espacios que separan los numeros
+  archivoLectura = fopen ("prueba.txt","r");
+  archivoEscritura = fopen ("pruebaEscritura.txt","a+t");
 
-  char actual = fgetc(archivoEntrada);
-  while (actual !=  EOF) {
-
-      actual = fgetc(archivoEntrada);
+  if (archivoLectura == NULL) {
+    printf("\nError de apertura del archivo. \n\n");
+  } else {
+    while ((caracter = fgetc(archivoLectura)) != EOF) {
+      printf("%c", fputc(caracter, archivoEscritura));
+      if (caracter == '0' || i == 1 || i == 2) {
+        if (caracter == 'x' || caracter == 'X' || i == 2) {
+          i = 2;
+          if (caracter == ' ') {
+            if (correcto == true) {
+              //archivoEscritura,"%s",
+              printf("Hexa\n");
+            } else printf("No es valido Hexa\n");
+            i = 0;
+            correcto = true;
+            primeraSaltear = false;
+          } else {
+            if (primeraSaltear == false) {
+              primeraSaltear = true;
+            } else correcto = Hexa(caracter, correcto);
+          }
+        } else {
+          i = 1;
+          if (caracter == ' ') {
+            if (correcto == true) printf("Octal\n");
+            else printf("No es valido Octal\n");
+            i = 0;
+            correcto = true;
+          }
+          else correcto=Octal(caracter, correcto);
+        }
+      }
+      else if ((caracter >= '1' && caracter <= '9') || i == 3) {
+        i = 3;
+        if (caracter == ' ') {
+          if (correcto == true) printf("Decimal\n");
+          else printf("No es valido Decimal\n");
+          i = 0;
+          correcto = true;
+        } else correcto = Decimal(caracter, correcto);
+      } else {
+        if (primeraSaltear == false) primeraSaltear = true;
+        else {
+          printf("No es valido\n");primeraSaltear = false;
+        }
+        i = 0;
+        correcto = true;
+      }
+    }
   }
-
-  // escribirArchivo(archivoSalida, "%s", "s");
-  // escribirArchivo(archivoSalida, "%s no es constante entera", "Hola");
-
-  if (archivoEntrada == NULL || archivoSalida == NULL) {
-    printf("Ha ocurrido un error leyendo alguno de los archivos.\n");
-    return;
-  }
-
-  fclose(archivoEntrada);
-  fclose(archivoSalida);
-  return;
+  fclose(archivoLectura);
+  fclose(archivoEscritura);
 }
 
 int main () {
-  manipularArchivos();
-  char octal[9] = "01234567";
-  char octalFalso[9] = "01234597";
-  char decimal[9] = "12345690";
-  char decimalFalso[9] = "9a234567";
-  char hexa[9] = "0x1aF";
-  char hexaFalso[9] = "0x1Ag";
-
-  printf("Octal es %i\n",  constanteOctal(octal));
-  printf("Octal falso es %i\n",  constanteOctal(octalFalso));
-  printf("Decimal es %i\n",  constanteDecimal(decimal));
-  printf("Decimal falso es %i\n",  constanteDecimal(decimalFalso));
-  printf("Hexa es %i\n",  constanteHexa(hexa));
-  printf("Hexa falso es %i\n",  constanteHexa(hexaFalso));
-
+  CargarArchivo();
   return 0;
 }
