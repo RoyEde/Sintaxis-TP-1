@@ -1,45 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+#define OCTAL " es una constante Octal\n"
+#define DECIMAL " es una constante Decimal\n"
+#define HEXADECIMAL " es una constante Hexadecimal\n"
+#define ERROR " no es una constante entera\n"
 
-int esDecimalUOctal (char constante, char tope) {
+_Bool esDecimalUOctal (char constante, char tope) {
   return constante >= '0' && constante <= tope;
 }
 
-int esHexa (char constante) {
+_Bool esHexa (char constante) {
   return (constante >= 'a' && constante <= 'f') || (constante >= 'A' && constante <= 'F');
-}
-
-int constanteDecimal (char constante[]) {
-  int i = 1;
-  int condicion = esDecimalUOctal(constante[i], '9');
-  while (constante[i] != '\0' && condicion) {
-    condicion = esDecimalUOctal(constante[i], '9');
-    if (condicion) i++;
-  }
-
-  return constante[i] == '\0';
-}
-
-int constanteHexa (char constante[]) {
-  int i = 2;
-  int condicion = esDecimalUOctal(constante[i], '9') || esHexa(constante[i]);
-  while (constante[i] != '\0' && condicion) {
-    condicion = esDecimalUOctal(constante[i], '9') || esHexa(constante[i]);
-    if (condicion) i++;
-  }
-
-  return constante[i] == '\0';
-}
-
-int constanteOctal (char constante[]) {
-  int i = 1;
-  int condicion = esDecimalUOctal(constante[i], '7');
-  while (constante[i] != '\0' && condicion) {
-    condicion = esDecimalUOctal(constante[i], '7');
-    if (condicion) i++;
-  }
-
-  return constante[i] == '\0';
 }
 
 void escribirArchivo (FILE *archivo,  char mensaje[], char constante[]) {
