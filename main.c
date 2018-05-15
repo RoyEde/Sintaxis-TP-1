@@ -14,18 +14,6 @@ _Bool esHexa (char constante) {
   return (constante >= 'a' && constante <= 'f') || (constante >= 'A' && constante <= 'F');
 }
 
-_Bool posibleHexa (FILE *archivoEntrada) {
-  char actual = fgetc(archivoEntrada);
-  if (esDecimalUOctal(actual, '7')) {
-    actual = fgetc(archivoEntrada);
-    if (actual == 'x' || actual == 'X') {
-      actual = fgetc(archivoEntrada);
-      if (esDecimalUOctal(actual, '9') || esHexa(actual)) return true;
-    }
-  }
-  return true;
-}
-
 void escribirArchivo (FILE *archivo,  char mensaje[], char constante[]) {
   fprintf(archivo, mensaje, constante);
   return;
