@@ -14,6 +14,18 @@ _Bool esHexa (char constante) {
   return (constante >= 'a' && constante <= 'f') || (constante >= 'A' && constante <= 'F');
 }
 
+_Bool posibleHexa (FILE *archivoEntrada) {
+  char actual = fgetc(archivoEntrada);
+  if (esDecimalUOctal(actual, '7')) {
+    actual = fgetc(archivoEntrada);
+    if (actual == 'x' || actual == 'X') {
+      actual = fgetc(archivoEntrada);
+      if (esDecimalUOctal(actual, '9') || esHexa(actual)) return true;
+    }
+  }
+  return true;
+}
+
 void escribirArchivo (FILE *archivo,  char mensaje[], char constante[]) {
   fprintf(archivo, mensaje, constante);
   return;
@@ -45,19 +57,6 @@ void manipularArchivos () {
 
 int main () {
   manipularArchivos();
-  char octal[9] = "01234567";
-  char octalFalso[9] = "01234597";
-  char decimal[9] = "12345690";
-  char decimalFalso[9] = "9a234567";
-  char hexa[9] = "0x1aF";
-  char hexaFalso[9] = "0x1Ag";
-
-  printf("Octal es %i\n",  constanteOctal(octal));
-  printf("Octal falso es %i\n",  constanteOctal(octalFalso));
-  printf("Decimal es %i\n",  constanteDecimal(decimal));
-  printf("Decimal falso es %i\n",  constanteDecimal(decimalFalso));
-  printf("Hexa es %i\n",  constanteHexa(hexa));
-  printf("Hexa falso es %i\n",  constanteHexa(hexaFalso));
 
   return 0;
 }
