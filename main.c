@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#define OCTAL " es una constante Octal\n"
-#define DECIMAL " es una constante Decimal\n"
-#define HEXADECIMAL " es una constante Hexadecimal\n"
-#define ERROR " no es una constante entera\n"
+#define OCTAL " es una Constante Octal\n"
+#define DECIMAL " es una Constante Decimal\n"
+#define HEXADECIMAL " es una Constante Hexadecimal\n"
+#define ERROR " no es una Constante Entera\n"
 
 _Bool Decimal(char num, bool correcto)
 {
@@ -141,8 +141,7 @@ void CargarArchivo()
     fclose(archivoEscritura);
     return;
 }
-int main()
-{
-    CargarArchivo();
-    return 0;
+int main() {
+  CargarArchivo();
+  return 0;
 }
