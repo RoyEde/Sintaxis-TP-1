@@ -28,9 +28,9 @@ void FinPalabra(bool *correcto, bool *octal, bool *hexa, bool *decimal, bool *no
 {
     if(*correcto)
     {
-        if(*octal){EscribirEsConstanteEntera(OCTAL,23,archivoEscritura);}
-        else if(*decimal){EscribirEsConstanteEntera(DECIMAL,25,archivoEscritura);}
-        else if(*hexa){EscribirEsConstanteEntera(HEXADECIMAL,29,archivoEscritura);}
+        if(*octal){EscribirEsConstanteEntera(OCTAL, archivoEscritura);}
+        else if(*decimal){EscribirEsConstanteEntera(DECIMAL, archivoEscritura);}
+        else if(*hexa){EscribirEsConstanteEntera(HEXADECIMAL, archivoEscritura);}
     }
     else {EscribirEsConstanteEntera(ERROR,23,archivoEscritura);}
 
@@ -44,9 +44,9 @@ void FinPalabra(bool *correcto, bool *octal, bool *hexa, bool *decimal, bool *no
     return;
 }
 
-void EscribirEsConstanteEntera(char texto[], int largo, FILE *archivo)
+void EscribirEsConstanteEntera(char texto[], FILE *archivo)
 {
-    fprintf(texto, archivo);
+    fprintf(archivo, texto);
     return;
 }
 
