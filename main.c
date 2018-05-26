@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#define OCTAL " es una constante Octal\n"
+#define DECIMAL " es una constante Decimal\n"
+#define HEXADECIMAL " es una constante Hexadecimal\n"
+#define ERROR " no es una constante entera\n"
 
 _Bool Decimal(char num, bool correcto)
 {
@@ -20,15 +24,15 @@ _Bool Hexa(char num, bool correcto)
     return correcto;
 }
 
-void FinPalabra(bool *correcto, bool *octal, bool *hexa, bool *decimal, bool *novalido, bool *primeraSaltear, bool *hexaDistinto0X, char enteroOctal[], char enteroDecimal[], char enteroHexadecimal[], char noEsEntero[], FILE *archivoEscritura)
+void FinPalabra(bool *correcto, bool *octal, bool *hexa, bool *decimal, bool *novalido, bool *primeraSaltear, bool *hexaDistinto0X, FILE *archivoEscritura)
 {
     if(*correcto)
     {
-        if(*octal){EscribirEsConstanteEntera(enteroOctal,23,archivoEscritura);}
-        else if(*decimal){EscribirEsConstanteEntera(enteroDecimal,25,archivoEscritura);}
-        else if(*hexa){EscribirEsConstanteEntera(enteroHexadecimal,29,archivoEscritura);}
+        if(*octal){EscribirEsConstanteEntera(OCTAL,23,archivoEscritura);}
+        else if(*decimal){EscribirEsConstanteEntera(DECIMAL,25,archivoEscritura);}
+        else if(*hexa){EscribirEsConstanteEntera(HEXADECIMAL,29,archivoEscritura);}
     }
-    else {EscribirEsConstanteEntera(noEsEntero,23,archivoEscritura);}
+    else {EscribirEsConstanteEntera(ERROR,23,archivoEscritura);}
 
     *correcto=true;
     *octal=false;
@@ -37,11 +41,13 @@ void FinPalabra(bool *correcto, bool *octal, bool *hexa, bool *decimal, bool *no
     *novalido=false;
     *primeraSaltear=false;
     *hexaDistinto0X=false;
+    return;
 }
 
 void EscribirEsConstanteEntera(char texto[], int largo, FILE *archivo)
 {
     fwrite(texto,1,largo,archivo);
+    return;
 }
 
 void CargarArchivo()
@@ -50,17 +56,12 @@ void CargarArchivo()
     FILE *archivoEscritura;
 
 	char caracter;
-	char enteroDecimal[25]="Es una Constante Decimal\n";
-	char enteroOctal[23]="Es una Constante Octal\n";
-	char enteroHexadecimal[29]="Es una Constante Hexadecimal\n";
-	char noEsEntero[23]="No es Constante Entera\n";
-
-    bool correcto=true;//se asegura de que la palabra sea correcta
-    bool octal=false;//se asegura de tomar la palabra como octal
-    bool hexa=false;//se asegura de tomar la palabra como hexa
-    bool decimal=false;//se asegura de tomar la palabra como decimal
-    bool novalido=false;//se asegura de validar toda la palabra cuando no es valida
-    bool primeraSaltear=false;//se asegura que no revise si la X de hexadecimal es valida ni los espacios que separan los numeros
+  bool correcto=true;//se asegura de que la palabra sea correcta
+  bool octal=false;//se asegura de tomar la palabra como octal
+  bool hexa=false;//se asegura de tomar la palabra como hexa
+  bool decimal=false;//se asegura de tomar la palabra como decimal
+  bool novalido=false;//se asegura de validar toda la palabra cuando no es valida
+  bool primeraSaltear=false;//se asegura que no revise si la X de hexadecimal es valida ni los espacios que separan los numeros
 	bool hexaDistinto0X=false;//se asegura que el hexadecimal sea distinto a 0x o 0X
 
 	archivoLectura = fopen("prueba.txt","r");
@@ -83,7 +84,7 @@ void CargarArchivo()
                     octal=false;
                     if(caracter == ' ')
                     {
-                        FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, enteroOctal, enteroDecimal, enteroHexadecimal, noEsEntero, archivoEscritura);
+                        FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
                     }
                     else
                     {
@@ -108,7 +109,7 @@ void CargarArchivo()
                     octal=true;
                     if(caracter == ' ')
                     {
-                        FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, enteroOctal, enteroDecimal, enteroHexadecimal, noEsEntero, archivoEscritura);
+                        FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
                     }
                     else{correcto=Octal(caracter, correcto);}
                 }
@@ -118,7 +119,7 @@ void CargarArchivo()
                 decimal=true;
                 if(caracter == ' ')
                 {
-                    FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, enteroOctal, enteroDecimal, enteroHexadecimal, noEsEntero, archivoEscritura);
+                    FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
                 }
                 else{correcto=Decimal(caracter, correcto);}
             }
@@ -129,15 +130,16 @@ void CargarArchivo()
                 else if(caracter == ' ')
                 {
                     correcto=false;
-                    FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, enteroOctal, enteroDecimal, enteroHexadecimal, noEsEntero, archivoEscritura);
+                    FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
                 }
 
             }
         }
-        FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, enteroOctal, enteroDecimal, enteroHexadecimal, noEsEntero, archivoEscritura);
+        FinPalabra(&correcto, &octal, &hexa, &decimal, &novalido, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
     }
     fclose(archivoLectura);
     fclose(archivoEscritura);
+    return;
 }
 int main()
 {
