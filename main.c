@@ -46,7 +46,7 @@ void FinPalabra(bool *correcto, bool *octal, bool *hexa, bool *decimal, bool *no
 
 void EscribirEsConstanteEntera(char texto[], int largo, FILE *archivo)
 {
-    fwrite(texto,1,largo,archivo);
+    fprintf(texto, archivo);
     return;
 }
 
