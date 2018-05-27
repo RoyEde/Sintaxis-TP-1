@@ -1,0 +1,22 @@
+0x  no es una Constante Entera
+12  es una Constante Decimal
+c9  no es una Constante Entera
+0X43  no es una Constante Entera
+a  no es una Constante Entera
+12  es una Constante Decimal
+077  no es una Constante Entera
+011  no es una Constante Entera
+36  es una Constante Decimal
+079  no es una Constante Entera
+0xaB  no es una Constante Entera
+0x3h  no es una Constante Entera
+15a  no es una Constante Entera
+0xfgtT  no es una Constante Entera
+44  es una Constante Decimal
+b  no es una Constante Entera
+0X  no es una Constante Entera
+0xabcdef00444  no es una Constante Entera
+0x000x  no es una Constante Entera
+223402  es una Constante Decimal
+0Xasdfy  no es una Constante Entera
+50  es una Constante Decimal

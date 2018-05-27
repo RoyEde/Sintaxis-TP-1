@@ -5,24 +5,33 @@
 #define DECIMAL " es una Constante Decimal\n"
 #define HEXADECIMAL " es una Constante Hexadecimal\n"
 #define ERROR " no es una Constante Entera\n"
+//Habia un Bug en que si habia un decimal que tenia un 0 despues del principio, entraba a octal, ya esta arreglado
+//Saque varios BOOL y puse 2 INT para que sea un poco mas facil de leer
+//Cree palabraCorrecta por las 3 funciones de BOOL Hexa, Octal, Decimal
+//Use un switch para mejorar cuando devuelve el tipo de variable
+//La funcion finpalabra la corre solo 1 vez en el if para evitar uso innecesario de la compu
+//*Aca tiene que ver si el primer caracter es un 0 para que sea hexa u octal, pero en caso que el decimal tenga un 0, iba a entrar igual
+//Por lo tanto hice que solo entrara al if ese solo si el 0 es el primer caracter
 
-
-_Bool Decimal(char num, bool correcto) {
-  correcto = (num >= '0' || num <= '9');
-  return correcto;
+int PalabraCorrecta (char num, int validez){
+  switch (validez) { //Devuelve validez = 0 Si no cumple con la condicion de cada tipo, en caso que cumple, devuelve la misma validez con la que vino
+    case 1:
+      if(num < '0' || num > '7')
+        validez = 0;
+      break;
+    case 2:
+      if (num < '0' || num > '9')
+        validez = 0;
+      break;
+    case 3:
+      if ((num < '0' || num > '9')  && (num < 'a' || num > 'f') && (num < 'A' || num > 'F'))
+        validez = 0;
+      break;
+  }
+  return validez;
 }
 
-_Bool Octal(char num, bool correcto) {
-  correcto = (num >= '0' || num <= '7');
-  return correcto;
-}
-
-_Bool Hexa(char num, bool correcto) {
-  correcto = ((num >= '0' || num <= '9') && (num >= 'a' || num <= 'f') && (num >= 'A' || num <= 'F'));
-  return correcto;
-}
-
-void FinPalabra(bool *correcto, int validez, bool *primeraSaltear, bool *hexaDistinto0X, FILE *archivoEscritura) {
+void FinPalabra(int validez, FILE *archivoEscritura) {
 
     switch (validez) {
       case 1:
@@ -38,12 +47,6 @@ void FinPalabra(bool *correcto, int validez, bool *primeraSaltear, bool *hexaDis
         EscribirEsConstanteEntera(archivoEscritura, ERROR);
         break;
     }
-
-
-  *correcto=true;
-  validez=0;
-  *primeraSaltear=false;
-  *hexaDistinto0X=false;
   return;
 }
 
@@ -56,11 +59,9 @@ void CargarArchivo() {
   FILE *archivoLectura;
   FILE *archivoEscritura;
 
-	char caracter;
-  bool correcto = true;//se asegura de que la palabra sea correcta
-  int validez;
-  bool primeraSaltear = false;//se asegura que no revise si la X de hexadecimal es valida ni los espacios que separan los numeros
-	bool hexaDistinto0X = false;//se asegura que el hexadecimal sea distinto a 0x o 0X
+  char caracter; // El caracter que agarra del archivo
+  int validez; // Valor del entero para saber que tipo es: 0 = No valido, 1 = Octal, 2 = Decimal, 3 = Hexa
+  int numeroDeCaracter = 0; // Para saber en que numero de caracter del entero dado estamos
 
 	archivoLectura = fopen("prueba.txt", "r");
 	archivoEscritura = fopen("pruebaEscritura.txt", "w");
@@ -69,53 +70,40 @@ void CargarArchivo() {
     printf("\nError de apertura del archivo. \n\n");
   } else {
     while((caracter = fgetc(archivoLectura)) != EOF) {
-      validez = 0;
+      numeroDeCaracter++;
       printf("%c", fputc(caracter, archivoEscritura));
-      if (caracter == '0' || validez == 1 || validez == 3) {
-        if (caracter == 'x' || caracter == 'X' || validez == 3) {
-          validez = 3;
-          if (caracter == ' ') {
-            FinPalabra(&correcto, validez, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
-          } else {
-            if (primeraSaltear == false) {
-              primeraSaltear = true;
-              correcto = false;
+        if (validez == 3 && caracter == ' '  && numeroDeCaracter == 3){ //En el caso de tener 0x o 0X solo, tiene que ser no valido, y yo lo hize aca
+          validez = 0;
+          FinPalabra(validez, archivoEscritura);
+          numeroDeCaracter=0;
+        } else if (caracter == ' ' ) { //Si el caracter es vacio, significa que termino el numero y va a FinPalabra a fijarse si que debe poner en el archivo de salida
+          FinPalabra(validez, archivoEscritura);
+          validez = 0; //Reseteo de variables cuando termina
+          numeroDeCaracter=0;
+        } else {
+        if ((caracter == '0' || validez == 1 || validez == 3) && numeroDeCaracter == 1) { //*Explicacion Arriba
+          if (caracter == 'x' || caracter == 'X' || validez == 3 ) {
+            if ((caracter == 'x' || caracter == 'X' ) && numeroDeCaracter == 2) {
+              validez = 3;
+            } else if (caracter == 'x' || caracter == 'X' ){ //En caso de tener x algun numero despues del segundo, tiene que ser no valido
+              validez = 0;
             } else {
-              if (hexaDistinto0X == false) {
-                hexaDistinto0X = true;
-                correcto = true;
-              }
-              correcto = Hexa(caracter, correcto);
+              validez = 3 ;
+              validez = PalabraCorrecta(caracter, validez);
             }
-          }
-        } else {
-          validez = 1;
-          if (caracter == ' ') {
-            FinPalabra(&correcto, validez, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
           } else {
-            correcto = Octal(caracter, correcto);
+            validez = 1;
+            validez = PalabraCorrecta(caracter, validez);
           }
-        }
-      }
-      else if ((caracter >= '1' && caracter <= '9') || validez == 2) {
-        validez = 2;
-        if (caracter == ' ') {
-          FinPalabra(&correcto, validez, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
+        } else if (((caracter >= '1' && caracter <= '9') && numeroDeCaracter == 1 ) || validez == 2) {
+          //Solo deberia entrar si el primer caracter es entre 1 y 9 o si ya fue dado como decimal anteriormente
+          validez = 2;
+          validez = PalabraCorrecta(caracter, validez);
         } else {
-          correcto = Decimal(caracter, correcto);
-        }
-      } else {
-        validez = 0;
-        if (primeraSaltear == false) {
-          primeraSaltear = true;
-        }
-        else if (caracter == ' ') {
-          correcto = false;
-          FinPalabra(&correcto, validez, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
+          validez = 0;
         }
       }
     }
-    FinPalabra(&correcto, validez, &primeraSaltear, &hexaDistinto0X, archivoEscritura);
   }
   fclose(archivoLectura);
   fclose(archivoEscritura);
