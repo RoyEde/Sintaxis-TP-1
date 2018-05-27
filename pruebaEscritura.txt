@@ -1,22 +1,23 @@
 0x  no es una Constante Entera
 12  es una Constante Decimal
 c9  no es una Constante Entera
-0X43  no es una Constante Entera
+0X43  es una Constante Hexadecimal
 a  no es una Constante Entera
 12  es una Constante Decimal
-077  no es una Constante Entera
-011  no es una Constante Entera
+077  es una Constante Octal
+011  es una Constante Octal
 36  es una Constante Decimal
 079  no es una Constante Entera
-0xaB  no es una Constante Entera
+0xaB  es una Constante Hexadecimal
 0x3h  no es una Constante Entera
 15a  no es una Constante Entera
 0xfgtT  no es una Constante Entera
 44  es una Constante Decimal
 b  no es una Constante Entera
 0X  no es una Constante Entera
-0xabcdef00444  no es una Constante Entera
+0xabcdef00444  es una Constante Hexadecimal
 0x000x  no es una Constante Entera
 223402  es una Constante Decimal
 0Xasdfy  no es una Constante Entera
 50  es una Constante Decimal
+0000  es una Constante Octal

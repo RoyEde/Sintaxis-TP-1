@@ -72,23 +72,22 @@ void CargarArchivo() {
     while((caracter = fgetc(archivoLectura)) != EOF) {
       numeroDeCaracter++;
       printf("%c", fputc(caracter, archivoEscritura));
-        if (validez == 3 && caracter == ' '  && numeroDeCaracter == 3){ //En el caso de tener 0x o 0X solo, tiene que ser no valido, y yo lo hize aca
-          validez = 0;
-          FinPalabra(validez, archivoEscritura);
-          numeroDeCaracter=0;
-        } else if (caracter == ' ' ) { //Si el caracter es vacio, significa que termino el numero y va a FinPalabra a fijarse si que debe poner en el archivo de salida
+        if (caracter == ' ' ) {
+          if (validez == 3 && numeroDeCaracter == 3){ //En el caso de tener 0x o 0X solo, tiene que ser no valido, y yo lo hize aca
+            validez = 0;
+            FinPalabra(validez, archivoEscritura);
+            numeroDeCaracter=0;
+          } else { //Si el caracter es vacio, significa que termino el numero y va a FinPalabra a fijarse si que debe poner en el archivo de salida
           FinPalabra(validez, archivoEscritura);
           validez = 0; //Reseteo de variables cuando termina
           numeroDeCaracter=0;
+          }
         } else {
-        if ((caracter == '0' || validez == 1 || validez == 3) && numeroDeCaracter == 1) { //*Explicacion Arriba
+        if ((caracter == '0' && numeroDeCaracter == 1) || validez == 1 || validez == 3 ) { //*Explicacion Arriba
           if (caracter == 'x' || caracter == 'X' || validez == 3 ) {
             if ((caracter == 'x' || caracter == 'X' ) && numeroDeCaracter == 2) {
               validez = 3;
-            } else if (caracter == 'x' || caracter == 'X' ){ //En caso de tener x algun numero despues del segundo, tiene que ser no valido
-              validez = 0;
-            } else {
-              validez = 3 ;
+            } else { //En caso de tener x algun numero despues del segundo, tiene que ser no valido
               validez = PalabraCorrecta(caracter, validez);
             }
           } else {
