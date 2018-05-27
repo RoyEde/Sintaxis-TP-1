@@ -101,6 +101,8 @@ void CargarArchivo() {
               validez = 0;
           }
         }
+      }if(numeroDeCaracter != 0){
+        FinPalabra(validez, archivoEscritura);
       }
     }
   fclose(archivoLectura);

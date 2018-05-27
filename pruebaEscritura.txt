@@ -20,4 +20,4 @@ b  no es una Constante Entera
 223402  es una Constante Decimal
 0Xasdfy  no es una Constante Entera
 50  es una Constante Decimal
-0000  es una Constante Octal
+0000 es una Constante Octal
