@@ -63,10 +63,10 @@ void CargarArchivo() {
   int validez; // Valor del entero para saber que tipo es: 0 = No valido, 1 = Octal, 2 = Decimal, 3 = Hexa
   int numeroDeCaracter = 0; // Para saber en que numero de caracter del entero dado estamos
 
-	archivoLectura = fopen("prueba.txt", "r");
-	archivoEscritura = fopen("pruebaEscritura.txt", "w");
+  archivoLectura = fopen("prueba.txt", "r");
+  archivoEscritura = fopen("pruebaEscritura.txt", "w");
 
-	if (archivoLectura == NULL) {
+  if (archivoLectura == NULL) {
     printf("\nError de apertura del archivo. \n\n");
     } else {
       while((caracter = fgetc(archivoLectura)) != EOF) {
@@ -76,30 +76,29 @@ void CargarArchivo() {
             if (validez == 3 && numeroDeCaracter == 3){ //En el caso de tener 0x o 0X solo, tiene que ser no valido, y yo lo hize aca
               validez = 0;
               FinPalabra(validez, archivoEscritura);
-              numeroDeCaracter=0;
             } else { //Si el caracter es vacio, significa que termino el numero y va a FinPalabra a fijarse que debe poner en el archivo de salida
-            FinPalabra(validez, archivoEscritura);
-            validez = 0; //Reseteo de variables cuando termina
-            numeroDeCaracter=0;
+              FinPalabra(validez, archivoEscritura);
+              validez = 0; //Reseteo de variables cuando termina
             }
+          numeroDeCaracter = 0;
           } else {
-          if ((caracter == '0' && numeroDeCaracter == 1) || validez == 1 || validez == 3 ) { //*Explicacion Arriba
-            if (caracter == 'x' || caracter == 'X' || validez == 3 ) {
-              if (numeroDeCaracter == 2) {//como la primera vez que entra aca es con una x, no hace falta evaluarlo otra vez
-                validez = 3;
-              } else { //En caso de tener x algun numero despues del segundo, tiene que ser no valido
+            if ((caracter == '0' && numeroDeCaracter == 1) || validez == 1 || validez == 3 ) { //*Explicacion Arriba
+              if (caracter == 'x' || caracter == 'X' || validez == 3 ) {
+                if (numeroDeCaracter == 2) {//como la primera vez que entra aca es con una x, no hace falta evaluarlo otra vez
+                  validez = 3;
+                } else { //En caso de tener x algun numero despues del segundo, tiene que ser no valido
+                  validez = PalabraCorrecta(caracter, validez);
+                }
+              } else {
+                validez = 1;
                 validez = PalabraCorrecta(caracter, validez);
               }
-            } else {
-              validez = 1;
+            } else if (((caracter >= '1' && caracter <= '9') && numeroDeCaracter == 1 ) || validez == 2) {
+              //Solo deberia entrar si el primer caracter es entre 1 y 9 o si ya fue dado como decimal anteriormente
+              validez = 2;
               validez = PalabraCorrecta(caracter, validez);
-            }
-          } else if (((caracter >= '1' && caracter <= '9') && numeroDeCaracter == 1 ) || validez == 2) {
-            //Solo deberia entrar si el primer caracter es entre 1 y 9 o si ya fue dado como decimal anteriormente
-            validez = 2;
-            validez = PalabraCorrecta(caracter, validez);
-          } else {
-            validez = 0;
+            } else {
+              validez = 0;
           }
         }
       }
